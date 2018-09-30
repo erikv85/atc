@@ -6,14 +6,11 @@ GSRC = graphics/
 
 binaries = simple_atc basic_graphics
 
-simple_atc: simple_atc.c graphics.o ball.o collision.o
+simple_atc: simple_atc.c graphics.o collision.o
 	$(CC) $^ -I${GSRC} -o $@ ${INCLUDES} ${LDFLAGS} ${CFLAGS}
 
 graphics.o: $(GSRC)graphics.c $(GSRC)graphics.h
 	$(CC) -c $^ $(INCLUDES)
-
-ball.o: ball.c ball.h
-	$(CC) -c $^
 
 collision.o: collision.c collision.h
 	$(CC) -c $^

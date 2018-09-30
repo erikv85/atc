@@ -11,7 +11,6 @@
 #include <string.h> /* strcmp, strlen */
 
 #include "graphics.h"
-#include "ball.h"
 #include "collision.h"
 
 void test2d(char **argv);
@@ -61,17 +60,17 @@ int main(int argc, char **argv)
 
         float x = 0;        /* starting position */
         float v = 0.1;    /* starting velocity */
-        ball_t *ball = create_ball(x, 0.5, 1); // hardcoded y-pos for now
-        ball->u = v;
+        struct disk *d = new_disk(x, 0.5, 0.025, 0, 0);
+        d->xv = v;
         float vnew = 0; /* radar will read new velocity into this var */
 
         if (graphics)
             InitializeGraphics(argv[0], 400, 400);
-        while (ball->x >= SECTOR_START && ball->x <= SECTOR_END) {
-            move(ball);
+        while (d->xc >= SECTOR_START && d->xc <= SECTOR_END) {
+            move_disk(d);
             if (graphics) {
                 ClearScreen();
-                DrawCircle(ball->x, ball->y, 1, 1, ball->radius, ball->color);
+                DrawCircle(d->xc, d->yc, 1, 1, d->radius, 0);
                 Refresh();
             }
             sleep(1);
@@ -94,9 +93,9 @@ int main(int argc, char **argv)
                 }
                 else if (ctrl_msg[0] == 'v') {
                     vnew = atof(ctrl_msg+2);
-                    ball->u = vnew;
+                    d->xv = vnew;
                     printf("Correct message format '%s', updating velocity to %f " \
-                        "and sending ACK.\n", ctrl_msg, ball->u);
+                        "and sending ACK.\n", ctrl_msg, d->xv);
                     write(rad2ctrl[WRITE_END], "ACK", 5);
                 }
                 else { //this should not happen
@@ -116,7 +115,7 @@ int main(int argc, char **argv)
             CloseDisplay();
         }
         printf("No more traffic in sector.\n");
-        destroy_ball(ball);
+        free_disk(d);
     }
     else {                             /* Control is the parent process */
         close(ctrl2rad[READ_END]);
