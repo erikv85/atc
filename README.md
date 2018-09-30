@@ -22,3 +22,10 @@ Under heavy construction and restructuring.
 ## 2017-09-07
 
 Removed files with early attempts at this project.
+
+## 2018-09-30
+
+Added some collision detection functions, to be integrated at a later
+time.
+
+Will work on this little project when I have time.
