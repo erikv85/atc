@@ -25,20 +25,6 @@ move(ball_t *ball)
 }
 
 void
-moveTo(ball_t *ball, float destx, float desty)
-{
-  ball->x = destx;
-  ball->y = desty;
-}
-
-void
-moveByStep(ball_t *ball, float xstep, float ystep)
-{
-  ball->x += xstep;
-  ball->y += ystep;
-}
-
-void
 destroy_ball(ball_t *ball)
 {
   if (ball)

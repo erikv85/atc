@@ -116,6 +116,7 @@ int main(int argc, char **argv)
             CloseDisplay();
         }
         printf("No more traffic in sector.\n");
+        destroy_ball(ball);
     }
     else {                             /* Control is the parent process */
         close(ctrl2rad[READ_END]);
