@@ -24,26 +24,13 @@ float *solve_quadratic(float a, float b, float c) {
 }
 
 float *calc_coeffs(struct disk d1, struct disk d2) {
-    float x10,x20,y10,y20,u1,u2,v1,v2,r1,r2;
-    x10 = d1.xc;
-    x20 = d2.xc;
-    y10 = d1.yc;
-    y20 = d2.yc;
-    u1 = d1.xv;
-    u2 = d2.xv;
-    v1 = d1.yv;
-    v2 = d2.yv;
-    r1 = d1.radius;
-    r2 = d2.radius;
-    float a,b,c;
-    a = (u1 - u2) * (u1 - u2) + (v1 - v2) * (v1 - v2);
-    c = (x10 - x20) * (x10 - x20) + (y10 - y20) * (y10 - y20) - (r1 + r2) * (r1 + r2);
-    float bx = u1 * x10 + u2 * x20 - u1 * x20 - u2 * x10;
-    float by = v1 * y10 + v2 * y20 - v1 * y20 - v2 * y10;
-    b = 2 * (bx + by);
+    float a = (d1.xv - d2.xv) * (d1.xv - d2.xv) + (d1.yv - d2.yv) * (d1.yv - d2.yv);
+    float c = (d1.xc - d2.xc) * (d1.xc - d2.xc) + (d1.yc - d2.yc) * (d1.yc - d2.yc) - (d1.radius + d2.radius) * (d1.radius + d2.radius);
+    float bx = d1.xv * d1.xc + d2.xv * d2.xc - d1.xv * d2.xc - d2.xv * d1.xc;
+    float by = d1.yv * d1.yc + d2.yv * d2.yc - d1.yv * d2.yc - d2.yv * d1.yc;
     float *coeffs = malloc(3 * sizeof(float));
     *coeffs = a;
-    *(coeffs + 1) = b;
+    *(coeffs + 1) = 2 * (bx + by);
     *(coeffs + 2) = c;
     return coeffs;
 }
@@ -56,6 +43,21 @@ float *time_of_collision(struct disk d1, struct disk d2) {
     c = *(coeffs + 2);
     free(coeffs);
     return solve_quadratic(a, b, c);
+}
+
+struct disk *new_disk(float xc, float yc, float r, float xv, float yv) {
+    struct disk *d = malloc(sizeof(struct disk));
+    d->xc = xc;
+    d->yc = yc;
+    d->radius = r;
+    d->xv = xv;
+    d->yv = yv;
+    return d;
+}
+
+void free_disk(struct disk *d) {
+    if (d)
+        free(d);
 }
 
 float min(float a, float b) {
