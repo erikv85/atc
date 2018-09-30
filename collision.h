@@ -11,7 +11,7 @@ struct disk {
     float yv;
 };
 
-void move(struct disk *d);
+void move_disk(struct disk *d);
 
 float min(float, float);
 

@@ -12,12 +12,20 @@
 
 #include "graphics.h"
 #include "ball.h"
+#include "collision.h"
+
+void test2d(char **argv);
 
 int main(int argc, char **argv)
 {
     int graphics = 1; /* graphics is on by default */
-    if (argc > 1)
+    if (argc > 1) {
         graphics = atoi(argv[1]);
+        if (graphics == 2) {
+            test2d(argv);
+            return 0;
+        }
+    }
 
     /* set up params that radar and ctrl both need */
     const float SECTOR_START = 0;
@@ -132,4 +140,25 @@ int main(int argc, char **argv)
     }
 
     return 0;
+}
+
+void test2d(char **argv) {
+    struct disk d1 = { 0.025, 0.75, 0.025, 0.000001, -0.000001 };
+    struct disk d2 = { 0.025, 0.25, 0.025, 0.000001, 0.000001 };
+    InitializeGraphics(argv[0], 400, 400);
+    while (1) {
+        ClearScreen();
+        DrawCircle(d1.xc, d1.yc, 1, 1, d1.radius, 0);
+        DrawCircle(d2.xc, d2.yc, 1, 1, d2.radius, 0);
+        float *times = time_of_collision(d1, d2);
+        float t_min = min(times[0], times[1]);
+        if (t_min > 0)
+            printf("Collision in %f seconds\n", t_min);
+        free(times);
+        Refresh();
+        move_disk(&d1);
+        move_disk(&d2);
+    }
+    FlushDisplay();
+    CloseDisplay();
 }

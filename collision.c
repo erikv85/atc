@@ -4,7 +4,7 @@
 
 #include "collision.h"
 
-void move(struct disk *d) {
+void move_disk(struct disk *d) {
     d->xc += d->xv;
     d->yc += d->yv;
 }
@@ -57,17 +57,6 @@ float *time_of_collision(struct disk d1, struct disk d2) {
     free(coeffs);
     return solve_quadratic(a, b, c);
 }
-
-/*
-int main() {
-    struct disk d1 = { 0, 2, 1, 1, -1 };
-    struct disk d2 = { 0, -2, 1, 1, 1 };
-    float *times = time_of_collision(d1, d2);
-    printf("t = %f\n", min(times[0], times[1]));
-    free(times);
-    return 0;
-}
-*/
 
 float min(float a, float b) {
     return a <= b ? a : b;
