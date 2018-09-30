@@ -1,9 +1,3 @@
-/**
- * 1D simplification of an ATC system.
- * NOTE: This file started out as a copy of the 1D version that
- * didn't have graphics.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> /* sleep */
@@ -15,8 +9,7 @@
 
 void test2d(char **argv);
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     int graphics = 1; /* graphics is on by default */
     if (argc > 1) {
         graphics = atoi(argv[1]);
@@ -58,10 +51,7 @@ int main(int argc, char **argv)
         close(rad2ctrl[READ_END]);
         char ctrl_msg[10] = { '\0' };
 
-        float x = 0;        /* starting position */
-        float v = 0.1;    /* starting velocity */
-        struct disk *d = new_disk(x, 0.5, 0.025, 0, 0);
-        d->xv = v;
+        struct disk *d = new_disk(0, 0.5, 0.025, 0.1, 0);
         float vnew = 0; /* radar will read new velocity into this var */
 
         if (graphics)

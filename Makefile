@@ -4,7 +4,7 @@ INCLUDES = -I/opt/X11/include
 LDFLAGS = -L/opt/X11/lib -lX11 -lm
 GSRC = graphics/
 
-binaries = simple_atc basic_graphics
+binaries = simple_atc
 
 simple_atc: simple_atc.c graphics.o collision.o
 	$(CC) $^ -I${GSRC} -o $@ ${INCLUDES} ${LDFLAGS} ${CFLAGS}
