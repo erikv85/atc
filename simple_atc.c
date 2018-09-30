@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
         if (graphics)
             InitializeGraphics(argv[0], 400, 400);
         while (d->xc >= SECTOR_START && d->xc <= SECTOR_END) {
-            move_disk(d);
+            move(d);
             if (graphics) {
                 ClearScreen();
                 DrawCircle(d->xc, d->yc, 1, 1, d->radius, 0);
@@ -146,8 +146,8 @@ void test2d(char **argv) {
             printf("Collision in %f seconds\n", t_min);
         free(times);
         Refresh();
-        move_disk(&d1);
-        move_disk(&d2);
+        move(&d1);
+        move(&d2);
     }
     FlushDisplay();
     CloseDisplay();

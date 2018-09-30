@@ -15,7 +15,7 @@ struct disk *new_disk(float xc, float yc, float r, float xv, float yv);
 
 void free_disk(struct disk *d);
 
-void move_disk(struct disk *d);
+void move(struct disk *d);
 
 float min(float, float);
 

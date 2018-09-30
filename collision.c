@@ -1,10 +1,9 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 #include "collision.h"
 
-void move_disk(struct disk *d) {
+void move(struct disk *d) {
     d->xc += d->xv;
     d->yc += d->yv;
 }
