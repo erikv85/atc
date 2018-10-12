@@ -9,20 +9,6 @@ void move(struct disk *d)
         d->yc += d->yv;
 }
 
-float *solve_quadratic(float a, float b, float c)
-{
-        float denom = 2 * a;
-        float discr = b * b - 4 * a * c;
-        if (denom == 0 || discr < 0) { // NaN or non-real roots
-                return NULL;
-        } else {
-                float *x = malloc(2 * sizeof(float));
-                *x = (-b + sqrt(discr))/denom;
-                *(x + 1) = (-b - sqrt(discr))/denom;
-                return x;
-        }
-}
-
 float *calc_coeffs(struct disk d1, struct disk d2)
 {
         float a = (d1.xv - d2.xv) * (d1.xv - d2.xv) + (d1.yv - d2.yv) * (d1.yv - d2.yv);
