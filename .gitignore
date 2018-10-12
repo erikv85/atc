@@ -1,3 +1,5 @@
 *.gch
 *.o
 *.swp
+tags
+cscope*
