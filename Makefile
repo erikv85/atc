@@ -15,5 +15,9 @@ graphics.o: $(GSRC)graphics.c $(GSRC)graphics.h
 collision.o: collision.c collision.h
 	$(CC) -c $^
 
+# example usage: make args="2" run
+run: simple_atc
+	./$^ $(args)
+
 clean:
 	rm -f *~ *.o *.gch $(binaries)
