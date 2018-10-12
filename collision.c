@@ -3,18 +3,21 @@
 
 #include "collision.h"
 
-void move(struct disk *d) {
+void move(struct disk *d)
+{
 	d->xc += d->xv;
 	d->yc += d->yv;
 }
 
-float *solve_quadratic(float a, float b, float c) {
+float *solve_quadratic(float a, float b, float c)
+{
 	float denom = 2 * a;
 	float discr = b * b - 4 * a * c;
 	if (denom == 0 || discr < 0) { // NaN or non-real roots
 		return NULL;
 	}
-	else {
+	else
+{
 		float *x = malloc(2 * sizeof(float));
 		*x = (-b + sqrt(discr))/denom;
 		*(x + 1) = (-b - sqrt(discr))/denom;
@@ -22,7 +25,8 @@ float *solve_quadratic(float a, float b, float c) {
 	}
 }
 
-float *calc_coeffs(struct disk d1, struct disk d2) {
+float *calc_coeffs(struct disk d1, struct disk d2)
+{
 	float a = (d1.xv - d2.xv) * (d1.xv - d2.xv) + (d1.yv - d2.yv) * (d1.yv - d2.yv);
 	float c = (d1.xc - d2.xc) * (d1.xc - d2.xc) + (d1.yc - d2.yc) * (d1.yc - d2.yc) - (d1.radius + d2.radius) * (d1.radius + d2.radius);
 	float bx = d1.xv * d1.xc + d2.xv * d2.xc - d1.xv * d2.xc - d2.xv * d1.xc;
@@ -34,7 +38,8 @@ float *calc_coeffs(struct disk d1, struct disk d2) {
 	return coeffs;
 }
 
-float *time_of_collision(struct disk d1, struct disk d2) {
+float *time_of_collision(struct disk d1, struct disk d2)
+{
 	float *coeffs = calc_coeffs(d1, d2);
 	float a,b,c;
 	a = *coeffs;
@@ -44,7 +49,8 @@ float *time_of_collision(struct disk d1, struct disk d2) {
 	return solve_quadratic(a, b, c);
 }
 
-struct disk *new_disk(float xc, float yc, float r, float xv, float yv) {
+struct disk *new_disk(float xc, float yc, float r, float xv, float yv)
+{
 	struct disk *d = malloc(sizeof(struct disk));
 	d->xc = xc;
 	d->yc = yc;
@@ -54,11 +60,13 @@ struct disk *new_disk(float xc, float yc, float r, float xv, float yv) {
 	return d;
 }
 
-void free_disk(struct disk *d) {
+void free_disk(struct disk *d)
+{
 	if (d)
 		free(d);
 }
 
-float min(float a, float b) {
+float min(float a, float b)
+{
 	return a <= b ? a : b;
 }
