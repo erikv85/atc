@@ -16,8 +16,11 @@ collision.o: collision.c collision.h
 	$(CC) -c $^
 
 # example usage: make args="2" run
-run: simple_atc
+run: atc_app
 	./$^ $(args)
 
+atc_app: atc_app.c radar.o aircraft.o
+	$(CC) $^ -o $@
+
 clean:
-	rm -f *~ *.o *.gch $(binaries)
+	rm -f *~ *.o *.gch $(binaries) a.out
