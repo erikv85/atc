@@ -9,6 +9,12 @@ void move(struct disk *d)
         d->yc += d->yv;
 }
 
+/**
+ * Solves the quadratic polynomial ax^2 + bx + c.
+ *
+ * @return The roots of the specified polynomial. If either 2a or the
+ * discriminant are zero, this function returns NULL.
+ */
 float *solve_quadratic(float a, float b, float c)
 {
         float denom = 2 * a;
@@ -36,6 +42,11 @@ float *calc_coeffs(struct disk d1, struct disk d2)
         return coeffs;
 }
 
+/**
+ * Calculate the time of collision of two disks.
+ *
+ * @return The two possible points of collision...
+ */
 float *time_of_collision(struct disk d1, struct disk d2)
 {
         float *coeffs = calc_coeffs(d1, d2);
