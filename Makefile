@@ -12,15 +12,15 @@ simple_atc: simple_atc.c graphics.o collision.o
 graphics.o: $(GSRC)graphics.c $(GSRC)graphics.h
 	$(CC) -c $^ $(INCLUDES)
 
-collision.o: collision.c collision.h
+%.o: %.c %.h
 	$(CC) -c $^
 
 # example usage: make args="2" run
 run: atc_app
 	./$^ $(args)
 
-atc_app: atc_app.c radar.o aircraft.o
-	$(CC) $^ -o $@
+atc_app: atc_app.c radar.o aircraft.o collision.o
+	$(CC) $^ -o $@ -lm
 
 clean:
 	rm -f *~ *.o *.gch $(binaries) a.out
