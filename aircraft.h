@@ -1,14 +1,20 @@
 #ifndef AIRCRAFT_H
 #define AIRCRAFT_H
 
+#include "radar.h"
 #include "collision.h"
 
 struct aircraft {
-        struct disk d;
+        struct disk *d;
         int freq;
+        int id;
 };
 
 struct aircraft *new_aircraft(float xc, float yc, float r, float xv, float yv);
+
+void set_freq(struct aircraft *self, int freq);
+
+void set_id(struct aircraft *self, int id);
 
 /**
  * We have an aircraft/disk d. d stands at gate. d must register
@@ -47,5 +53,9 @@ void broadcast_presence(struct aircraft *self);
  * Register with a known radar.
  */
 int register_with_radar(struct radar *rdr);
+
+void move_aircraft(struct aircraft *self);
+
+void free_aircraft(struct aircraft *ac);
 
 #endif /* AIRCRAFT_H */
