@@ -48,12 +48,12 @@ int main(int argc, char **argv)
                 char ctrl_msg[10] = { '\0' };
 
                 struct aircraft *acs[2];
-                acs[0] = new_aircraft(0, 0.5, 0.025, 0.1, 0);
+                acs[0] = new_aircraft(0, 0.5, 0.025, 0.01, 0);
                 set_freq(acs[0], 100);
                 set_id(acs[0], 1);
-                acs[1] = new_aircraft(1, 0.75, 0.025, -0.05, 0);
+                acs[1] = new_aircraft(1, 0.75, 0.025, -0.005, 0);
                 set_freq(acs[1], 100);
-                set_id(acs[1], 1);
+                set_id(acs[1], 2);
                 float vnew = 0; /* radar will read new velocity into this var */
 
                 if (graphics)
@@ -69,14 +69,16 @@ int main(int argc, char **argv)
                         }
                         sleep(1);
 
-                        /* Check if controller has left a message. If he has, check if
-                         * its format is correct. If it is correct, read the new
-                         * velocity, update velocity, and send ACK to control. If the
-                         * message does not have a correct format, send NACK to
-                         * control. Finally, if control has not left a message, do
-                         * nothing.
+                        /* Check for messages. The message is out in the "ether", every
+                         * pilot must analyze its contents and applicability. Sample
+                         * command: "i1|v2" (without quotes) - this means that aircraft
+                         * with id 1 shall set speed to 2.
                          */
                         read(ctrl2rad[READ_END], ctrl_msg, 10); /* read 10B from pipe to ctrl_msg */
+                        int i;
+                        for (i = 0; i < 2; i++) {
+                                read_cmd(acs[i], ctrl_msg);
+                        }
                         if (ctrl_msg[0] == '\0') {
                                 ;
                         }
@@ -117,7 +119,7 @@ int main(int argc, char **argv)
 
                 // TODO: add description of how controller loop works
                 while (1) {
-                        scanf("%s", user_input); /* protocol: v-<velocity><Enter> */
+                        scanf("%s", user_input);
                         write(ctrl2rad[WRITE_END], user_input, 10);
                         read(rad2ctrl[READ_END], radar_response, 5);
                         if (strcmp(radar_response, "ACK") == 0)
