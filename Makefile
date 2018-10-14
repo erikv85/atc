@@ -6,7 +6,7 @@ GSRC = graphics/
 
 binaries = simple_atc
 
-simple_atc: simple_atc.c graphics.o collision.o
+simple_atc: simple_atc.c graphics.o collision.o aircraft.o
 	$(CC) $^ -I${GSRC} -o $@ ${INCLUDES} ${LDFLAGS} ${CFLAGS}
 
 graphics.o: $(GSRC)graphics.c $(GSRC)graphics.h
