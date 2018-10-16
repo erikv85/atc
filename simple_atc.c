@@ -30,11 +30,17 @@ int main(int argc, char **argv)
         pipe(ctrl2rad);
         pipe(rad2ctrl);
 
-        /* radar should not block when reading msgs from control */
+        /* reading should not block */
         if (fcntl(ctrl2rad[READ_END], F_SETFL, O_NONBLOCK) == -1) {
                 fprintf(stderr, "Call to fcntl failed.\n");
                 return -1;
         }
+        if (fcntl(rad2ctrl[READ_END], F_SETFL, O_NONBLOCK) == -1) {
+                fprintf(stderr, "Call to fcntl failed.\n");
+                return -1;
+        }
+
+        int naircraft = 2;
 
         /* fork and get started */
         pid_t pid = fork();
@@ -47,26 +53,35 @@ int main(int argc, char **argv)
                 close(rad2ctrl[READ_END]);
                 char ctrl_msg[10] = { '\0' };
 
-                struct aircraft *acs[2];
+                struct aircraft *acs[naircraft];
                 acs[0] = new_aircraft(0, 0.5, 0.025, 0.01, 0);
                 set_freq(acs[0], 100);
                 set_id(acs[0], 1);
                 acs[1] = new_aircraft(1, 0.75, 0.025, -0.005, 0);
                 set_freq(acs[1], 100);
                 set_id(acs[1], 2);
-                float vnew = 0; /* radar will read new velocity into this var */
 
+                int report_interval = 10;
+                int time = 0;
                 if (graphics)
                         InitializeGraphics(argv[0], 400, 400);
                 while (acs[0]->d->xc >= SECTOR_START && acs[0]->d->xc <= SECTOR_END) {
-                        move_aircraft(acs[0]);
-                        move_aircraft(acs[1]);
+                        int i;
+                        for (i = 0; i < naircraft; i++)
+                                move_aircraft(acs[i]);
                         if (graphics) {
                                 ClearScreen();
                                 DrawCircle(acs[0]->d->xc, acs[0]->d->yc, 1, 1, acs[0]->d->radius, 0);
                                 DrawCircle(acs[1]->d->xc, acs[1]->d->yc, 1, 1, acs[1]->d->radius, 0);
                                 Refresh();
                         }
+                        if (!(time % report_interval)) {
+                                for (i = 0; i < naircraft; i++) {
+                                        printf("\taircraft %d is at (%f, %f) with speed %f\n", \
+                                                        acs[i]->id, acs[i]->d->xc, acs[i]->d->yc, get_velocity(acs[i]));
+                                }
+                        }
+                        time = (time + 1) % report_interval;
                         sleep(1);
 
                         /* Check for messages. The message is out in the "ether", every
@@ -75,33 +90,11 @@ int main(int argc, char **argv)
                          * with id 1 shall set speed to 2.
                          */
                         read(ctrl2rad[READ_END], ctrl_msg, 10); /* read 10B from pipe to ctrl_msg */
-                        int i;
-                        for (i = 0; i < 2; i++) {
+                        for (i = 0; i < naircraft; i++) {
                                 read_cmd(acs[i], ctrl_msg);
                         }
-                        if (ctrl_msg[0] == '\0') {
-                                ;
-                        }
-                        else if (ctrl_msg[0] != '\0') {
-                                if (ctrl_msg[0] != 'v') {
-                                        printf("Incorrect message format '%s', sending NACK.\n", ctrl_msg);
-                                        write(rad2ctrl[WRITE_END], "NACK", 5);
-                                } else if (ctrl_msg[0] == 'v') {
-                                        vnew = atof(ctrl_msg+2);
-                                        acs[0]->d->xv = vnew;
-                                        printf("Correct message format '%s', updated velocity to %f, " \
-                                                "sending ACK.\n", ctrl_msg, acs[0]->d->xv);
-                                        write(rad2ctrl[WRITE_END], "ACK", 5);
-                                } else { //this should not happen
-                                        fprintf(stderr, "A message was read but neither ACK nor " \
-                                                "NACK was returned to control.\n");
-                                }
-                                /* reset the message */
-                                ctrl_msg[0] = '\0';
-                        } else { //this should not happen
-                                fprintf(stderr, "The message '%s' registered neither as NULL " \
-                                        "nor non-NULL\n", ctrl_msg);
-                        }
+                        /* reset the message */
+                        ctrl_msg[0] = '\0';
                 }
                 if (graphics) {
                         FlushDisplay();
