@@ -10,6 +10,8 @@ struct aircraft {
         int id;
 };
 
+float get_velocity(struct aircraft *self);
+
 char *read_cmd(struct aircraft *self, char *cmd);
 
 struct aircraft *new_aircraft(float xc, float yc, float r, float xv, float yv);
