@@ -49,6 +49,13 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Call to fork failed.\n");
                 return -1;
         } else if (pid == 0) { /* the radar is the child process */
+                /* TODO:
+                 * char *fdstr[3];
+                 * fdstr[0] = ctrl2rad;
+                 * fdstr[1] = ctrl2rad;
+                 * fdstr[2] = 0;
+                 * execv("aircraft_main", fdstr);
+                 */
                 close(ctrl2rad[WRITE_END]);
                 close(rad2ctrl[READ_END]);
                 char ctrl_msg[10] = { '\0' };
