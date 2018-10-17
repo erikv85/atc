@@ -29,3 +29,8 @@ Added some collision detection functions, to be integrated at a later
 time.
 
 Will work on this little project when I have time.
+
+## 2018-10-17
+
+Basic functionality for changing the direction of an airplane has been
+implemented, along with various other changes.
