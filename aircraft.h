@@ -12,6 +12,10 @@ struct aircraft {
 
 float get_velocity(struct aircraft *self);
 
+float get_bearing(struct aircraft *self);
+
+void set_bearing(struct aircraft *self, int bearing);
+
 char *read_cmd(struct aircraft *self, char *cmd);
 
 struct aircraft *new_aircraft(float xc, float yc, float r, float xv, float yv);

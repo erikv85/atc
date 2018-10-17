@@ -17,6 +17,24 @@ float get_velocity(struct aircraft *self)
         return sqrt(u * u + v * v);
 }
 
+float get_bearing(struct aircraft *self)
+{
+        float u,v;
+        u = self->d->xv;
+        v = self->d->yv;
+        return atan2(v, u) * 180 * M_1_PI;
+}
+
+void set_bearing(struct aircraft *self, int bearing)
+{
+        float t = (float)bearing * M_PI / 180;
+        float u,v;
+        u = self->d->xv;
+        v = self->d->yv;
+        self->d->xv = u * cos(t) - v * sin(t);
+        self->d->yv = u * sin(t) + v * cos(t);
+}
+
 char *read_cmd(struct aircraft *self, char *cmd)
 {
         int i = 0;
@@ -35,6 +53,11 @@ char *read_cmd(struct aircraft *self, char *cmd)
                         self->d->xv *= foo_val;
                         self->d->yv *= foo_val;
                         printf("%f\n", get_velocity(self));
+                } else if (cmd_code == 'd') {
+                        printf("changing direction from %f to ", get_bearing(self));
+                        int dbearing = atoi(&cmd[4]);
+                        set_bearing(self, dbearing);
+                        printf("%f\n", get_bearing(self));
                 } else {
                         printf("ignoring non-velocity command code");
                 }
