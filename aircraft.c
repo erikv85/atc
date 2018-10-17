@@ -71,6 +71,12 @@ void free_aircraft(struct aircraft *ac)
         }
 }
 
+void report_status(struct aircraft *self)
+{
+        printf("\taircraft %d -> (xc, yc, v) = (%f, %f, %f)\n", \
+                        self->id, self->d->xc, self->d->yc, get_velocity(self));
+}
+
 void takeoff(struct aircraft *self)
 {
         printf("takeoff!\n");

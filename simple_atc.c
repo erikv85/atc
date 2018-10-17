@@ -80,8 +80,7 @@ int main(int argc, char **argv)
                         }
                         if (!(time % report_interval)) {
                                 for (i = 0; i < naircraft; i++) {
-                                        printf("\taircraft %d is at (%f, %f) with speed %f\n", \
-                                                        acs[i]->id, acs[i]->d->xc, acs[i]->d->yc, get_velocity(acs[i]));
+                                        report_status(acs[i]);
                                 }
                         }
                         time = (time + 1) % report_interval;

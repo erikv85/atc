@@ -62,4 +62,6 @@ void move_aircraft(struct aircraft *self);
 
 void free_aircraft(struct aircraft *ac);
 
+void report_status(struct aircraft *self);
+
 #endif /* AIRCRAFT_H */
