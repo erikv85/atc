@@ -59,10 +59,11 @@ int main(int argc, char **argv)
                 char ctrl_msg[10] = { '\0' };
 
                 struct aircraft *acs[naircraft];
-                acs[0] = new_aircraft(0, 0.5, 0.025, 0.01, 0);
+                float radius = 0.005;
+                acs[0] = new_aircraft(0, 0.5, radius, 0.01, 0);
                 set_freq(acs[0], 100);
                 set_id(acs[0], 1);
-                acs[1] = new_aircraft(1, 0.75, 0.025, -0.005, 0);
+                acs[1] = new_aircraft(1, 0.75, radius, -0.005, 0);
                 set_freq(acs[1], 100);
                 set_id(acs[1], 2);
 
