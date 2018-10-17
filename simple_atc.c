@@ -9,6 +9,8 @@
 
 void clear_draw_refresh(int naircraft, struct aircraft **acs);
 
+void end_graphics();
+
 int main(int argc, char **argv)
 {
         int graphics = 1;
@@ -69,34 +71,29 @@ int main(int argc, char **argv)
                 if (graphics)
                         InitializeGraphics(argv[0], 400, 400);
                 while (acs[0]->d->xc >= SECTOR_START && acs[0]->d->xc <= SECTOR_END) {
-                        int i;
-                        for (i = 0; i < naircraft; i++)
-                                move_aircraft(acs[i]);
                         if (graphics) {
                                 clear_draw_refresh(naircraft, acs);
                         }
-                        if (!(time % report_interval)) {
-                                for (i = 0; i < naircraft; i++) {
+                        read(ctrl2rad[READ_END], ctrl_msg, 10);
+                        int i;
+                        for (i = 0; i < naircraft; i++) {
+                                // Check for messages. The message is out in the "ether", every
+                                // pilot must analyze its contents and applicability. Sample
+                                // command: "i1|v2" (without quotes) - this means that aircraft
+                                // with id 1 shall set speed to 2.
+                                // reset the message
+                                read_cmd(acs[i], ctrl_msg);
+                                move_aircraft(acs[i]);
+                                if (!(time % report_interval)) {
                                         report_status(acs[i]);
                                 }
                         }
                         time = (time + 1) % report_interval;
                         sleep(1);
-
-                        // Check for messages. The message is out in the "ether", every
-                        // pilot must analyze its contents and applicability. Sample
-                        // command: "i1|v2" (without quotes) - this means that aircraft
-                        // with id 1 shall set speed to 2.
-                        read(ctrl2rad[READ_END], ctrl_msg, 10);
-                        for (i = 0; i < naircraft; i++) {
-                                read_cmd(acs[i], ctrl_msg);
-                        }
-                        // reset the message
                         ctrl_msg[0] = '\0';
                 }
                 if (graphics) {
-                        FlushDisplay();
-                        CloseDisplay();
+                        end_graphics();
                 }
                 printf("No more traffic in sector.\n");
                 free_aircraft(acs[0]);
@@ -134,4 +131,10 @@ void clear_draw_refresh(int naircraft, struct aircraft **acs)
                 DrawCircle(acs[i]->d->xc, acs[i]->d->yc, 1, 1, acs[i]->d->radius, 0);
         }
         Refresh();
+}
+
+void end_graphics()
+{
+        FlushDisplay();
+        CloseDisplay();
 }
