@@ -7,7 +7,7 @@
 #include "aircraft.h"
 #include "graphics.h"
 
-void test2d(char **argv);
+void clear_draw_refresh(int naircraft, struct aircraft **acs);
 
 int main(int argc, char **argv)
 {
@@ -73,10 +73,7 @@ int main(int argc, char **argv)
                         for (i = 0; i < naircraft; i++)
                                 move_aircraft(acs[i]);
                         if (graphics) {
-                                ClearScreen();
-                                DrawCircle(acs[0]->d->xc, acs[0]->d->yc, 1, 1, acs[0]->d->radius, 0);
-                                DrawCircle(acs[1]->d->xc, acs[1]->d->yc, 1, 1, acs[1]->d->radius, 0);
-                                Refresh();
+                                clear_draw_refresh(naircraft, acs);
                         }
                         if (!(time % report_interval)) {
                                 for (i = 0; i < naircraft; i++) {
@@ -127,4 +124,14 @@ int main(int argc, char **argv)
         }
 
         return 0;
+}
+
+void clear_draw_refresh(int naircraft, struct aircraft **acs)
+{
+        int i;
+        ClearScreen();
+        for (i = 0; i < naircraft; i++) {
+                DrawCircle(acs[i]->d->xc, acs[i]->d->yc, 1, 1, acs[i]->d->radius, 0);
+        }
+        Refresh();
 }
