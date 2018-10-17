@@ -11,7 +11,7 @@ void test2d(char **argv);
 
 int main(int argc, char **argv)
 {
-        int graphics = 1; /* graphics is on by default */
+        int graphics = 1;
         if (argc > 1) {
                 graphics = atoi(argv[1]);
         }
@@ -19,14 +19,12 @@ int main(int argc, char **argv)
         /* set up params that radar and ctrl both need */
         const float SECTOR_START = 0;
         const float SECTOR_END = 1;
-        const int READ_END = 0;  /* read end of a pipe */
-        const int WRITE_END = 1; /* write end of a pipe */
+        const int READ_END = 0;
+        const int WRITE_END = 1;
 
         /* set up pipes */
         int ctrl2rad[2]; /* used by ctrl to write to radar */
         int rad2ctrl[2]; /* used by radar to write to ctrl */
-
-        /* "start" pipes */
         pipe(ctrl2rad);
         pipe(rad2ctrl);
 
@@ -40,11 +38,9 @@ int main(int argc, char **argv)
                 return -1;
         }
 
-        int naircraft = 2;
+        int naircraft = 2; // TODO: make as arg
 
-        /* fork and get started */
         pid_t pid = fork();
-
         if (pid < 0) {
                 fprintf(stderr, "Call to fork failed.\n");
                 return -1;
@@ -91,16 +87,15 @@ int main(int argc, char **argv)
                         time = (time + 1) % report_interval;
                         sleep(1);
 
-                        /* Check for messages. The message is out in the "ether", every
-                         * pilot must analyze its contents and applicability. Sample
-                         * command: "i1|v2" (without quotes) - this means that aircraft
-                         * with id 1 shall set speed to 2.
-                         */
-                        read(ctrl2rad[READ_END], ctrl_msg, 10); /* read 10B from pipe to ctrl_msg */
+                        // Check for messages. The message is out in the "ether", every
+                        // pilot must analyze its contents and applicability. Sample
+                        // command: "i1|v2" (without quotes) - this means that aircraft
+                        // with id 1 shall set speed to 2.
+                        read(ctrl2rad[READ_END], ctrl_msg, 10);
                         for (i = 0; i < naircraft; i++) {
                                 read_cmd(acs[i], ctrl_msg);
                         }
-                        /* reset the message */
+                        // reset the message
                         ctrl_msg[0] = '\0';
                 }
                 if (graphics) {
