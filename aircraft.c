@@ -27,7 +27,10 @@ float get_bearing(struct aircraft *self)
 
 void set_bearing(struct aircraft *self, int bearing)
 {
-        float t = (float)bearing * M_PI / 180;
+        int degdiff = bearing - (int)get_bearing(self);
+        if (degdiff < 0)
+                degdiff += 360;
+        float t = (float)degdiff * M_PI / 180;
         float u,v;
         u = self->d->xv;
         v = self->d->yv;
@@ -54,10 +57,10 @@ char *read_cmd(struct aircraft *self, char *cmd)
                         self->d->yv *= foo_val;
                         printf("%f\n", get_velocity(self));
                 } else if (cmd_code == 'd') {
-                        printf("changing direction from %f to ", get_bearing(self));
+                        float oldbearing = get_bearing(self);
                         int dbearing = atoi(&cmd[4]);
                         set_bearing(self, dbearing);
-                        printf("%f\n", get_bearing(self));
+                        printf("changed direction from %f to %f\n", oldbearing, get_bearing(self));
                 } else {
                         printf("ignoring non-velocity command code");
                 }
