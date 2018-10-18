@@ -9,8 +9,6 @@
 
 void clear_draw_refresh(int naircraft, struct aircraft **acs);
 
-void end_graphics();
-
 int main(int argc, char **argv)
 {
         int graphics = 1;
@@ -94,7 +92,7 @@ int main(int argc, char **argv)
                         ctrl_msg[0] = '\0';
                 }
                 if (graphics) {
-                        end_graphics();
+                        EndGraphics();
                 }
                 printf("No more traffic in sector.\n");
                 free_aircraft(acs[0]);
@@ -132,10 +130,4 @@ void clear_draw_refresh(int naircraft, struct aircraft **acs)
                 DrawCircle(acs[i]->d->xc, acs[i]->d->yc, 1, 1, acs[i]->d->radius, 0);
         }
         Refresh();
-}
-
-void end_graphics()
-{
-        FlushDisplay();
-        CloseDisplay();
 }

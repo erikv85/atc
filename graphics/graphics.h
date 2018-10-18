@@ -89,4 +89,9 @@ void InitializeGraphics(char *command, int windowWidth, int windowHeight);
  */
 void SetCAxes(float cmin, float cmax);
 
+/*
+ * Wrapper, calls FlushDisplay, CloseDisplay
+ */
+void EndGraphics();
+
 #endif
