@@ -7,7 +7,7 @@
 #include "aircraft.h"
 #include "graphics.h"
 
-void clear_draw_refresh(int naircraft, struct aircraft **acs);
+void draw_aircrafts(int naircraft, struct aircraft **acs);
 
 int main(int argc, char **argv)
 {
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
                         InitializeGraphics(argv[0], 400, 400);
                 while (acs[0]->d->xc >= SECTOR_START && acs[0]->d->xc <= SECTOR_END) {
                         if (graphics) {
-                                clear_draw_refresh(naircraft, acs);
+                                draw_aircrafts(naircraft, acs);
                         }
                         read(ctrl2rad[READ_END], ctrl_msg, 10);
                         int i;
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
                                 read_cmd(acs[i], ctrl_msg);
                                 move_aircraft(acs[i]);
                                 if (!(time % report_interval)) {
-                                        report_status(acs[i]);
+                                        printf("%s\n", to_string(acs[i]));
                                 }
                         }
                         time = (time + 1) % report_interval;
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
         return 0;
 }
 
-void clear_draw_refresh(int naircraft, struct aircraft **acs)
+void draw_aircrafts(int naircraft, struct aircraft **acs)
 {
         int i;
         ClearScreen();

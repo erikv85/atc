@@ -40,7 +40,6 @@ void set_bearing(struct aircraft *self, int bearing)
 
 char *read_cmd(struct aircraft *self, char *cmd)
 {
-        int i = 0;
         if (cmd == NULL || cmd[0] != 'i') {
                 return NULL;
         } else if ((int)(cmd[1] - '0') == self->id) {
@@ -97,10 +96,11 @@ void free_aircraft(struct aircraft *ac)
         }
 }
 
-void report_status(struct aircraft *self)
+char *to_string(struct aircraft *self)
 {
-        printf("\taircraft %d -> (xc, yc, v) = (%f, %f, %f)\n", \
+        sprintf(self->info, "%d -> (x, y, v) = (%f, %f, %f)", \
                         self->id, self->d->xc, self->d->yc, get_velocity(self));
+        return self->info;
 }
 
 void takeoff(struct aircraft *self)

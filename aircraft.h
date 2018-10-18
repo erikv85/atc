@@ -8,6 +8,7 @@ struct aircraft {
         struct disk *d;
         int freq;
         int id;
+        char info[64];
 };
 
 float get_velocity(struct aircraft *self);
@@ -66,6 +67,6 @@ void move_aircraft(struct aircraft *self);
 
 void free_aircraft(struct aircraft *ac);
 
-void report_status(struct aircraft *self);
+char *to_string(struct aircraft *self);
 
 #endif /* AIRCRAFT_H */
