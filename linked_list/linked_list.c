@@ -1,36 +1,56 @@
+#include <stdio.h>
 #include <stdlib.h> /* malloc, free */
 
 #include "linked_list.h"
 
-/* Assume list root is not null */
-void push(void *val, node_t **root)
+void push(int val, list_t **l)
 {
-        node_t *newnode = malloc(sizeof(node_t));
+        struct node *newnode = malloc(sizeof(struct node));
         newnode->val = val;
-        newnode->next = *root;
-        *root = newnode;
+        newnode->next = *l;
+        *l = newnode;
 }
 
-/* Remove first item. */
-void *pop(node_t **root)
+int pop(list_t **l)
 {
-        if (!*root)
-                return NULL;
-
-	node_t *next = (*root)->next;
-        void *ret = (*root)->val;
-        free(*root);
-        *root = next;
-
+	struct node *next = (*l)->next;
+        int ret = (*l)->val;
+        free(*l);
+        *l = next;
         return ret;
 }
 
-void free_list(node_t *root)
+void *free_list(list_t **l)
 {
-        node_t *tmp;
-        while (root) {
-                tmp = root;
-                root = root->next;
-                free(tmp);
+        if (!l) {
+                ;
+        } else {
+                if (*l)
+                        free_node(*l);
+                free(l);
         }
+        return NULL;
+}
+
+void free_node(struct node *n)
+{
+        if (n->next)
+                free_node(n->next);
+        free(n);
+}
+
+void print_list(list_t **l)
+{
+        printf("[");
+        if (!l || !*l) {
+                ;
+        } else {
+                printf("%d", (*l)->val);
+                struct node *tmp = (*l)->next;
+                while (tmp) {
+                        printf(", %d", tmp->val);
+                        tmp = tmp->next;
+                }
+        }
+        printf("]\n");
 }

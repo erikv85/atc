@@ -1,25 +1,25 @@
 #include <stdio.h>
+#include <stdlib.h> /* malloc, free */
 
 #include "linked_list.h"
 
 int main(int argc, char **argv)
 {
-	node_t *root = NULL;
-	int x = 5;
-	push(&x, &root);
-	printf("%d\n", *(int *)root->val);
-	printf("%p\n", root->next);
-
-	int y = 7;
-	push(&y, &root);
-	printf("%d\n", *(int *)root->val);
-	printf("%p\n", root->next);
-
-	printf("popped value: %d\n", *(int *)pop(&root));
-	printf("%d\n", *(int *)root->val);
-	printf("%p\n", root->next);
-
-	free_list(root);
+	list_t **l = malloc(sizeof(struct node *));
+        print_list(l);
+	push(2, l);
+        print_list(l);
+	push(3, l);
+        print_list(l);
+	push(5, l);
+        print_list(l);
+	push(7, l);
+        print_list(l);
+        printf("%d\n", pop(l));
+        print_list(l);
+        l = free_list(l);
+        print_list(l);
+        printf("l addr: %p\n", l);
 
 	return 0;
 }
