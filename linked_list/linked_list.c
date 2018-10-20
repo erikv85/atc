@@ -11,9 +11,42 @@ void push(int val, list_t **l)
         *l = newnode;
 }
 
+int get(list_t **l, int index)
+{
+        int curr = 0;
+        struct node *tmp = *l;
+        while (curr != index) {
+                curr++;
+                tmp = tmp->next;
+        }
+        return tmp->val;
+}
+
+int remove_item(list_t **l, int index)
+{
+        struct node *tmp = *l;
+        int val;
+        if (index == 0) {
+                *l = (*l)->next;
+                val = tmp->val;
+                free(tmp);
+        } else {
+                int curr = 0;
+                while (curr != index - 1) {
+                        tmp = tmp->next;
+                        curr++;
+                }
+                val = tmp->next->val;
+                struct node *newnext = tmp->next->next;
+                free(tmp->next);
+                tmp->next = newnext;
+        }
+        return val;
+}
+
 int pop(list_t **l)
 {
-	struct node *next = (*l)->next;
+        struct node *next = (*l)->next;
         int ret = (*l)->val;
         free(*l);
         *l = next;
@@ -53,4 +86,15 @@ void print_list(list_t **l)
                 }
         }
         printf("]\n");
+}
+
+int size(list_t **l)
+{
+        int size = 0;
+        struct node *tmp = *l;
+        while (tmp) {
+                size++;
+                tmp = tmp->next;
+        }
+        return size;
 }
