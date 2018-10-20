@@ -1,16 +1,14 @@
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Ilinked_list -Igraphics
 INCLUDES = -I/opt/X11/include
 LDFLAGS = -L/opt/X11/lib -lX11 -lm
-GSRC = graphics/
+
+VPATH=.:linked_list:graphics
 
 binaries = a.out simple_atc aircraft_main sandbox
 
-simple_atc: simple_atc.c graphics.o collision.o aircraft.o
-	$(CC) $^ -I${GSRC} -o $@ ${INCLUDES} ${LDFLAGS} ${CFLAGS}
-
-graphics.o: $(GSRC)graphics.c $(GSRC)graphics.h
-	$(CC) -c $^ $(INCLUDES)
+simple_atc: simple_atc.c graphics.o collision.o aircraft.o linked_list.o
+	$(CC) $^ -o $@ ${INCLUDES} ${LDFLAGS} ${CFLAGS}
 
 %.o: %.c %.h
 	$(CC) -c $^
