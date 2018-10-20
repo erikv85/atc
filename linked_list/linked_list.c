@@ -3,7 +3,7 @@
 
 #include "linked_list.h"
 
-void push(int val, list_t **l)
+void push(void *val, list_t **l)
 {
         struct node *newnode = malloc(sizeof(struct node));
         newnode->val = val;
@@ -11,7 +11,7 @@ void push(int val, list_t **l)
         *l = newnode;
 }
 
-int get(list_t **l, int index)
+void *get(list_t **l, int index)
 {
         int curr = 0;
         struct node *tmp = *l;
@@ -35,10 +35,10 @@ int remove_by_value(list_t **l, int val)
         return remove_by_index(l, index);
 }
 
-int remove_by_index(list_t **l, int index)
+void *remove_by_index(list_t **l, int index)
 {
         struct node *tmp = *l;
-        int val;
+        void *val;
         if (index == 0) {
                 *l = (*l)->next;
                 val = tmp->val;
@@ -57,10 +57,10 @@ int remove_by_index(list_t **l, int index)
         return val;
 }
 
-int pop(list_t **l)
+void *pop(list_t **l)
 {
         struct node *next = (*l)->next;
-        int ret = (*l)->val;
+        void *ret = (*l)->val;
         free(*l);
         *l = next;
         return ret;
@@ -85,16 +85,16 @@ void free_node(struct node *n)
         free(n);
 }
 
-void print_list(list_t **l)
+void print_list(list_t **l, char *(*to_string)(void *))
 {
         printf("[");
         if (!l || !*l) {
                 ;
         } else {
-                printf("%d", (*l)->val);
+                printf("%s", to_string((*l)->val));
                 struct node *tmp = (*l)->next;
                 while (tmp) {
-                        printf(", %d", tmp->val);
+                        printf(", %s", to_string(tmp->val));
                         tmp = tmp->next;
                 }
         }
