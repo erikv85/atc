@@ -1,13 +1,18 @@
 CC = gcc
 
-INCLUDES = -I..
+CFLAGS = -I..
 LDFLAGS = -lm
 
-al_test: al_test.c linked_list.c ../collision.o ../aircraft.o
-	$(CC) $^ -o $@ ${INCLUDES} ${LDFLFAGS}
+VPATH=.:..
 
-ll_test: ll_test.c linked_list.c
+al_test: al_test.c linked_list.o collision.o aircraft.o
+	$(CC) $^ -o $@ ${LDFLAGS} ${CFLAGS}
+
+ll_test: ll_test.c linked_list.o
 	$(CC) $^ -o $@
+
+%.o: %.c %.h
+	$(CC) -c $^ ${CFLAGS} ${LDFLAGS}
 
 clean:
 	rm -f *~ *.o ll_test al_test
