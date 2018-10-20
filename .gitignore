@@ -1,5 +1,3 @@
-*
-!.gitignore
-!Makefile
-!*.c
-!*.h
+*.o
+*.gch
+*.swp
