@@ -12,7 +12,9 @@ void push(int val, list_t **l);
 
 int pop(list_t **l);
 
-int remove_item(list_t **l, int index);
+int remove_by_index(list_t **l, int index);
+
+int remove_by_value(list_t **l, int val);
 
 int get(list_t **l, int index);
 

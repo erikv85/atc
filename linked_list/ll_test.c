@@ -26,9 +26,10 @@ int main(int argc, char **argv)
         printf("1st item: %d\n", get(l, 1));
         printf("2nd item: %d\n", get(l, 2));
         printf("last item: %d\n", get(l, size(l) - 1));
-        printf("removed %d\n", remove_item(l, 0));
+        printf("removed %d\n", remove_by_index(l, 0));
         printf("size: %d\n", size(l));
-        printf("removed %d\n", remove_item(l, size(l) - 1));
+        printf("removed %d\n", remove_by_index(l, size(l) - 1));
+        printf("removed %d\n", remove_by_value(l, 5));
         print_list(l);
         l = free_list(l);
         printf("l addr: %p\n", l);

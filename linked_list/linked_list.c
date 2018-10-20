@@ -22,7 +22,20 @@ int get(list_t **l, int index)
         return tmp->val;
 }
 
-int remove_item(list_t **l, int index)
+int remove_by_value(list_t **l, int val)
+{
+        int index = 0;
+        struct node *tmp = *l;
+        int v = tmp->val;
+        while (v != val) {
+                tmp = tmp->next;
+                v = tmp->val;
+                index++;
+        }
+        return remove_by_index(l, index);
+}
+
+int remove_by_index(list_t **l, int index)
 {
         struct node *tmp = *l;
         int val;
