@@ -4,7 +4,7 @@ INCLUDES = -I/opt/X11/include
 LDFLAGS = -L/opt/X11/lib -lX11 -lm
 GSRC = graphics/
 
-binaries = a.out simple_atc aircraft_main
+binaries = a.out simple_atc aircraft_main sandbox
 
 simple_atc: simple_atc.c graphics.o collision.o aircraft.o
 	$(CC) $^ -I${GSRC} -o $@ ${INCLUDES} ${LDFLAGS} ${CFLAGS}
