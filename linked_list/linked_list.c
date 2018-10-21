@@ -3,6 +3,28 @@
 
 #include "linked_list.h"
 
+void add(list_t **l, void *val)
+{
+        if (!l) {
+                return;
+        } else {
+                struct node *newnode = malloc(sizeof(struct node));
+                newnode->val = val;
+                newnode->next = NULL;
+                if (!(*l)) {
+                        *l = newnode;
+                } else {
+                        int index = 1;
+                        struct node *curr = *l;
+                        while (curr->next) {
+                                curr = curr->next;
+                                index++;
+                        }
+                        curr->next = newnode;
+                }
+        }
+}
+
 void push(list_t **l, void *val)
 {
         struct node *newnode = malloc(sizeof(struct node));

@@ -16,7 +16,7 @@ void test2();
 
 int main(int argc, char **argv)
 {
-        test1();
+        test2();
 
         return 0;
 }
@@ -48,7 +48,6 @@ void test1()
         printf("removed %d\n", *(int *)remove_by_index(l, 0));
         printf("size: %d\n", size(l));
         printf("removed %d\n", *(int *)remove_by_index(l, size(l) - 1));
-        //printf("removed %d\n", remove_by_value(l, 5));
         print_list(l, int_to_string);
         l = free_list(l);
         printf("l addr: %p\n", l);
@@ -57,20 +56,33 @@ void test1()
 
 void test2()
 {
-        list_t **l = malloc(sizeof(struct node *));
-        *l = NULL;
-        printf("l is at %p, *l at %p\n", l, *l);
-        int x[] = { 2, 3, 5, 7, 11, 13 };
-        push(l, x);
-        //add(l, x);
-        print_list(l, int_to_string);
-        //add(l, x + 1);
-        push(l, x+1);
-        print_list(l, int_to_string);
-        printf("size: %d\n", size(l));
-        free_list(l);
-        printf("size: %d\n", size(l));
-        pop(l);
-        printf("size: %d\n", size(l));
-        l = free_list(l);
+        list_t **l2 = malloc(sizeof(struct node *));
+        int y[] = { 2, 3, 5, 7, 11, 13 };
+        print_list(l2, int_to_string);
+        add(l2, y);
+        print_list(l2, int_to_string);
+        add(l2, y+1);
+        print_list(l2, int_to_string);
+        add(l2, y+2);
+        print_list(l2, int_to_string);
+        add(l2, y+3);
+        print_list(l2, int_to_string);
+        add(l2, y+4);
+        print_list(l2, int_to_string);
+        add(l2, y+5);
+        print_list(l2, int_to_string);
+        printf("%d\n", *(int *)pop(l2));
+        print_list(l2, int_to_string);
+
+        printf("0th item: %d\n", *(int *)get(l2, 0));
+        printf("1st item: %d\n", *(int *)get(l2, 1));
+        printf("2nd item: %d\n", *(int *)get(l2, 2));
+        printf("last item: %d\n", *(int *)get(l2, size(l2) - 1));
+        printf("removed %d\n", *(int *)remove_by_index(l2, 0));
+        printf("size: %d\n", size(l2));
+        printf("removed %d\n", *(int *)remove_by_index(l2, size(l2) - 1));
+        print_list(l2, int_to_string);
+        l2 = free_list(l2);
+        printf("l2 addr: %p\n", l2);
+        print_list(l2, int_to_string);
 }
