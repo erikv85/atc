@@ -6,8 +6,14 @@
 
 #include "aircraft.h"
 #include "graphics.h"
+#include "linked_list.h"
+
+const float SECTOR_START = 0;
+const float SECTOR_END = 1;
 
 void draw_aircrafts(int naircraft, struct aircraft **acs);
+
+int out_of_bounds(struct aircraft *ac);
 
 int main(int argc, char **argv)
 {
@@ -17,8 +23,6 @@ int main(int argc, char **argv)
         }
 
         /* set up params that radar and ctrl both need */
-        const float SECTOR_START = 0;
-        const float SECTOR_END = 1;
         const int READ_END = 0;
         const int WRITE_END = 1;
 
@@ -64,6 +68,10 @@ int main(int argc, char **argv)
                 acs[1] = new_aircraft(1, 0.75, radius, -0.005, 0);
                 set_freq(acs[1], 100);
                 set_id(acs[1], 2);
+
+                list_t **ac_list = malloc(sizeof(struct node *));
+                push(acs[0], ac_list);
+                push(acs[1], ac_list);
 
                 int report_interval = 10;
                 int time = 0;
@@ -122,6 +130,13 @@ int main(int argc, char **argv)
         return 0;
 }
 
+int out_of_bounds(struct aircraft *ac)
+{
+        float x,y;
+        x = ac->d->xc;
+        y = ac->d->yc;
+        return (x < SECTOR_START || x > SECTOR_END || y < SECTOR_START || y > SECTOR_END);
+}
 void draw_aircrafts(int naircraft, struct aircraft **acs)
 {
         int i;
