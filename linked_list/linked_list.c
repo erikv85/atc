@@ -3,7 +3,7 @@
 
 #include "linked_list.h"
 
-void push(void *val, list_t **l)
+void push(list_t **l, void *val)
 {
         struct node *newnode = malloc(sizeof(struct node));
         newnode->val = val;
@@ -20,19 +20,6 @@ void *get(list_t **l, int index)
                 tmp = tmp->next;
         }
         return tmp->val;
-}
-
-int remove_by_value(list_t **l, int val)
-{
-        int index = 0;
-        struct node *tmp = *l;
-        int v = tmp->val;
-        while (v != val) {
-                tmp = tmp->next;
-                v = tmp->val;
-                index++;
-        }
-        return remove_by_index(l, index);
 }
 
 void *remove_by_index(list_t **l, int index)
@@ -91,10 +78,14 @@ void print_list(list_t **l, char *(*to_string)(void *))
         if (!l || !*l) {
                 ;
         } else {
-                printf("%s", to_string((*l)->val));
+                char *str = to_string((*l)->val);
+                printf("%s", str);
+                free(str);
                 struct node *tmp = (*l)->next;
                 while (tmp) {
-                        printf(", %s", to_string(tmp->val));
+                        str = to_string(tmp->val);
+                        printf(", %s", str);
+                        free(str);
                         tmp = tmp->next;
                 }
         }

@@ -8,7 +8,7 @@ struct node {
 
 typedef struct node list_t;
 
-void push(void *val, list_t **l);
+void push(list_t **l, void *val);
 
 void *pop(list_t **l);
 
