@@ -15,4 +15,4 @@ ll_test: ll_test.c linked_list.o
 	$(CC) -c $^ ${CFLAGS} ${LDFLAGS}
 
 clean:
-	rm -f *~ *.o ll_test al_test
+	$(RM) *~ *.o *.gch ll_test al_test
