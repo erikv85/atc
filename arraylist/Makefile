@@ -1,3 +1,5 @@
+CC=clang
+
 test_al: test_al.c arraylist.o
 	$(CC) $^ -o $@
 
