@@ -27,7 +27,8 @@ int remove_by_index(struct arraylist *l, int index)
 {
         int ret = l->arr[index];
         size_t ncopy = sizeof(int) * (l->capacity - (index + 1));
-        memcpy(l->arr + index, l->arr + index + 1, ncopy);
+        memmove(l->arr + index, l->arr + index + 1, ncopy);
+        l->size--;
         return ret;
 }
 
