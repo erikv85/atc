@@ -17,24 +17,26 @@ int main(int argc, char **argv)
 
 void test1(int default_size)
 {
-        list_t *l = new_list(default_size);
+        list_t l = new_list(default_size);
+        printf("%d, %ld, %p\n",
+                        l.size, l.capacity, l.arr);
+
         int i;
         for (i = 0; i <= default_size; i++) {
-                printf("adding %d\n", i+1);
-                add(l, i + 1);
+                printf("adding %d\n", i);
+                int tmp = i;
+                add(&l, &tmp);
         }
-        printf("capacity, size = %ld, %d\n", l->capacity, l->size);
+        printf("capacity, size = %ld, %d\n", l.capacity, l.size);
 
-        print_list(l);
         for (i = 0; i <= default_size; i++) {
-                printf("%d ", l->arr[i]);
+                printf("%d ", *(int *)l.arr[i]);
         }
         printf("\n");
-        printf("removed elem: %d\n", remove_by_index(l, 2));
-        print_list(l);
-        for (i = 0; i <= default_size; i++) {
-                printf("%d ", l->arr[i]);
+        printf("removed elem: %d\n", *(int *)remove_by_index(&l, 2));
+        for (i = 0; i < l.size; i++) {
+                printf("%d ", *(int *)l.arr[i]);
         }
         printf("\n");
-        free_list(l);
+        free_list(&l);
 }

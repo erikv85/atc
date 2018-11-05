@@ -4,29 +4,29 @@
 
 #include "arraylist.h"
 
-struct arraylist *new_list(size_t capacity)
+struct arraylist new_list(size_t capacity)
 {
-        struct arraylist *al = malloc(sizeof(struct arraylist));
-        al->capacity = capacity;
-        al->arr = malloc(sizeof(int) * (al->capacity));
-        al->size = 0;
+        struct arraylist al;
+        al.capacity = capacity;
+        al.arr = malloc(sizeof(void *) * (al.capacity));
+        al.size = 0;
         return al;
 }
 
-void add(struct arraylist *al, int x)
+void add(struct arraylist *al, void *x)
 {
         if (al->size == al->capacity - 1) {
                 al->capacity *= 2;
-                al->arr = realloc(al->arr, sizeof(int) * (al->capacity));
+                al->arr = realloc(al->arr, sizeof(void *) * (al->capacity));
         }
         al->arr[(al->size)++] = x;
 }
 
 // FIXME: run valgrind and diagnose
-int remove_by_index(struct arraylist *l, int index)
+void *remove_by_index(struct arraylist *l, int index)
 {
-        int ret = l->arr[index];
-        size_t ncopy = sizeof(int) * (l->capacity - (index + 1));
+        void *ret = l->arr[index];
+        size_t ncopy = sizeof(void *) * (l->capacity - (index + 1));
         memmove(l->arr + index, l->arr + index + 1, ncopy);
         l->size--;
         return ret;
@@ -34,17 +34,10 @@ int remove_by_index(struct arraylist *l, int index)
 
 void free_list(struct arraylist *l)
 {
-        if (l) {
-                if (l->arr)
-                        free(l->arr);
-                free(l);
-        }
+        free(l->arr);
 }
 
 void print_list(struct arraylist *l)
 {
-        int i;
-        for (i = 0; i < l->size; i++)
-                printf("%d ", l->arr[i]);
-        printf("\n");
+        printf("print_list: not implemented\n");
 }
