@@ -4,6 +4,10 @@
 #include "radar.h"
 #include "collision.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct aircraft {
         struct disk *d;
         int freq;
@@ -68,5 +72,9 @@ void move_aircraft(struct aircraft *self);
 void free_aircraft(struct aircraft *ac);
 
 char *to_string(struct aircraft *self);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* AIRCRAFT_H */

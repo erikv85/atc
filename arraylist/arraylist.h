@@ -3,6 +3,10 @@
 
 #include <stddef.h> /* size_t */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct arraylist {
         void **arr;      /**< array holding the elements */
         size_t capacity; /**< maximum no. of elems the list can hold */
@@ -18,5 +22,9 @@ struct arraylist new_list(size_t capacity);
 void free_list(struct arraylist *l);
 
 void print_list(struct arraylist *l);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ARRAYLIST_H */
