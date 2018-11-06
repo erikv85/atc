@@ -1,13 +1,13 @@
 CC = gcc
-CFLAGS = -Ilinked_list -Igraphics
+CFLAGS = -Iarraylist -Igraphics
 INCLUDES = -I/opt/X11/include
 LDFLAGS = -L/opt/X11/lib -lX11 -lm
 
-VPATH=.:linked_list:graphics
+VPATH=.:arraylist:graphics
 
 binaries = a.out simple_atc aircraft_main sandbox
 
-simple_atc: simple_atc.c graphics.o collision.o aircraft.o linked_list.o
+simple_atc: simple_atc.c graphics.o collision.o aircraft.o arraylist.o
 	$(CC) $^ -o $@ ${INCLUDES} ${LDFLAGS} ${CFLAGS}
 
 %.o: %.c %.h

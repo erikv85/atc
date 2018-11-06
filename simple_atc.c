@@ -6,12 +6,12 @@
 
 #include "aircraft.h"
 #include "graphics.h"
-#include "linked_list.h"
+#include "arraylist.h"
 
 const float SECTOR_START = 0;
 const float SECTOR_END = 1;
 
-void draw_aircrafts(int naircraft, struct aircraft **acs);
+void draw_aircrafts(struct arraylist ac_list);
 
 int out_of_bounds(struct aircraft *ac);
 
@@ -69,30 +69,33 @@ int main(int argc, char **argv)
                 set_freq(acs[1], 100);
                 set_id(acs[1], 2);
 
-                list_t **ac_list = malloc(sizeof(struct node *));
-                push(acs[0], ac_list);
-                push(acs[1], ac_list);
+                struct arraylist al = new_list(1);
+                add(&al, acs[0]);
+                add(&al, acs[1]);
 
                 int report_interval = 10;
                 int time = 0;
                 if (graphics)
                         InitializeGraphics(argv[0], 400, 400);
-                while (acs[0]->d->xc >= SECTOR_START && acs[0]->d->xc <= SECTOR_END) {
-                        if (graphics) {
-                                draw_aircrafts(naircraft, acs);
-                        }
+                while (al.size > 0) {
+                        if (graphics)
+                                draw_aircrafts(al);
                         read(ctrl2rad[READ_END], ctrl_msg, 10);
                         int i;
-                        for (i = 0; i < naircraft; i++) {
+                        for (i = 0; i < al.size; i++) {
                                 // Check for messages. The message is out in the "ether", every
                                 // pilot must analyze its contents and applicability. Sample
                                 // command: "i1|v2" (without quotes) - this means that aircraft
                                 // with id 1 shall set speed to 2.
                                 // reset the message
-                                read_cmd(acs[i], ctrl_msg);
-                                move_aircraft(acs[i]);
+                                read_cmd(al.arr[i], ctrl_msg);
+                                move_aircraft(al.arr[i]);
                                 if (!(time % report_interval)) {
-                                        printf("%s\n", to_string(acs[i]));
+                                        printf("%s\n", to_string(al.arr[i]));
+                                }
+                                if (out_of_bounds(al.arr[i])) {
+                                        printf("left radar: %s\n", to_string(al.arr[i]));
+                                        remove_by_index(&al, i);
                                 }
                         }
                         time = (time + 1) % report_interval;
@@ -137,12 +140,13 @@ int out_of_bounds(struct aircraft *ac)
         y = ac->d->yc;
         return (x < SECTOR_START || x > SECTOR_END || y < SECTOR_START || y > SECTOR_END);
 }
-void draw_aircrafts(int naircraft, struct aircraft **acs)
+void draw_aircrafts(struct arraylist ac_list)
 {
         int i;
         ClearScreen();
-        for (i = 0; i < naircraft; i++) {
-                DrawCircle(acs[i]->d->xc, acs[i]->d->yc, 1, 1, acs[i]->d->radius, 0);
+        for (i = 0; i < ac_list.size; i++) {
+                struct aircraft *curr_ac = (struct aircraft *)ac_list.arr[i];
+                DrawCircle(curr_ac->d->xc, curr_ac->d->yc, 1, 1, curr_ac->d->radius, 0);
         }
         Refresh();
 }
