@@ -95,6 +95,7 @@ int main(int argc, char **argv)
                                 }
                                 if (out_of_bounds(al.arr[i])) {
                                         printf("left radar: %s\n", to_string(al.arr[i]));
+                                        free_aircraft(al.arr[i]);
                                         remove_by_index(&al, i);
                                 }
                         }
@@ -106,8 +107,6 @@ int main(int argc, char **argv)
                         EndGraphics();
                 }
                 printf("No more traffic in sector.\n");
-                free_aircraft(acs[0]);
-                free_aircraft(acs[1]);
         } else { /* Control is the parent process */
                 close(ctrl2rad[READ_END]);
                 close(rad2ctrl[WRITE_END]);
