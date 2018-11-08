@@ -46,15 +46,17 @@ char *read_cmd(struct aircraft *self, char *cmd)
                 printf("message meant for %c received by %d\n", cmd[1], self->id);
                 char cmd_code = cmd[3];
                 char cmd_val = cmd[4];
-                float foo_val = (float)(cmd_val - '0'); // FIXME
+                float vec_vel = atof(cmd + 4);
                 printf("cmd letter: '%c'\n", cmd_code);
                 printf("cmd content: '%c'\n", cmd_val);
-                printf("cmd content as float: %f (%c)\n", foo_val, (cmd_val - '0'));
+                printf("cmd content as float: %f\n", vec_vel);
                 if (cmd_code == 'v') {
-                        printf("changing velocity from %f to ", get_velocity(self));
-                        self->d->xv *= foo_val;
-                        self->d->yv *= foo_val;
+                        float oldvel = get_velocity(self);
+                        float angle = get_bearing(self);
+                        self->d->xv = vec_vel * cos(angle);
+                        self->d->yv = vec_vel * sin(angle);
                         printf("%f\n", get_velocity(self));
+                        printf("changed velocity from %f to %f\n", oldvel, get_velocity(self));
                 } else if (cmd_code == 'd') {
                         float oldbearing = get_bearing(self);
                         int dbearing = atoi(&cmd[4]);
