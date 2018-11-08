@@ -4,6 +4,8 @@
 
 #include "aircraft.h"
 
+const double DEG_TO_RAD = M_PI / 180;
+
 void move_aircraft(struct aircraft *self)
 {
         move(self->d);
@@ -11,31 +13,41 @@ void move_aircraft(struct aircraft *self)
 
 float get_velocity(struct aircraft *self)
 {
-        float u,v;
-        u = self->d->xv;
-        v = self->d->yv;
+        float u = self->d->xv;
+        float v = self->d->yv;
         return sqrt(u * u + v * v);
 }
 
-float get_bearing(struct aircraft *self)
+void set_velocity(struct aircraft *self, float vp)
 {
-        float u,v;
-        u = self->d->xv;
-        v = self->d->yv;
-        return atan2(v, u) * 180 * M_1_PI;
+        float t = get_bearing(self);
+        self->d->xv = vp * cos(t);
+        self->d->yv = vp * sin(t);
 }
 
-void set_bearing(struct aircraft *self, int bearing)
+/**
+ * @return Bearing in radians
+ */
+float get_bearing(struct aircraft *self)
 {
-        int degdiff = bearing - (int)get_bearing(self);
-        if (degdiff < 0)
-                degdiff += 360;
-        float t = (float)degdiff * M_PI / 180;
-        float u,v;
-        u = self->d->xv;
-        v = self->d->yv;
-        self->d->xv = u * cos(t) - v * sin(t);
-        self->d->yv = u * sin(t) + v * cos(t);
+        //if x component isn't too close to zero
+        return atan2(self->d->yv, self->d->xv);
+        //else do magic
+}
+
+/**
+ * @param bearing Bearing in radians
+ */
+void set_bearing(struct aircraft *self, float bearing)
+{
+        float curr_bearing = get_bearing(self);
+        float d = bearing - curr_bearing;
+        float cosd = cos(d);
+        float sind = sin(d);
+        float u = self->d->xv;
+        float v = self->d->yv;
+        self->d->xv = u * cosd - v * sind;
+        self->d->yv = u * sind + v * cosd;
 }
 
 char *read_cmd(struct aircraft *self, char *cmd)
@@ -52,15 +64,12 @@ char *read_cmd(struct aircraft *self, char *cmd)
                 printf("cmd content as float: %f\n", vec_vel);
                 if (cmd_code == 'v') {
                         float oldvel = get_velocity(self);
-                        float angle = get_bearing(self);
-                        self->d->xv = vec_vel * cos(angle);
-                        self->d->yv = vec_vel * sin(angle);
-                        printf("%f\n", get_velocity(self));
+                        set_velocity(self, vec_vel);
                         printf("changed velocity from %f to %f\n", oldvel, get_velocity(self));
                 } else if (cmd_code == 'd') {
                         float oldbearing = get_bearing(self);
-                        int dbearing = atoi(&cmd[4]);
-                        set_bearing(self, dbearing);
+                        float rad_bearing = atof(cmd + 4) * DEG_TO_RAD;
+                        set_bearing(self, rad_bearing);
                         printf("changed direction from %f to %f\n", oldbearing, get_bearing(self));
                 } else {
                         printf("ignoring non-velocity command code");
@@ -100,8 +109,9 @@ void free_aircraft(struct aircraft *ac)
 
 char *to_string(struct aircraft *self)
 {
-        sprintf(self->info, "%d -> (x, y, v) = (%f, %f, %f)", \
-                        self->id, self->d->xc, self->d->yc, get_velocity(self));
+        float dbearing = get_bearing(self) * 180 * M_1_PI;
+        sprintf(self->info, "%d -> (x, y, v, d) = (%f, %f, %f, %f)", \
+                        self->id, self->d->xc, self->d->yc, get_velocity(self), dbearing);
         return self->info;
 }
 
