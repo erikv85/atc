@@ -4,6 +4,8 @@
 
 #include "aircraft.h"
 
+extern float time_scale;
+
 const double DEG_TO_RAD = M_PI / 180;
 
 void move_aircraft(struct aircraft *self)
@@ -64,7 +66,7 @@ char *read_cmd(struct aircraft *self, char *cmd)
                 printf("cmd content as float: %f\n", vec_vel);
                 if (cmd_code == 'v') {
                         float oldvel = get_velocity(self);
-                        set_velocity(self, vec_vel);
+                        set_velocity(self, vec_vel / time_scale);
                         printf("changed velocity from %f to %f\n", oldvel, get_velocity(self));
                 } else if (cmd_code == 'd') {
                         float oldbearing = get_bearing(self);
@@ -111,7 +113,8 @@ char *to_string(struct aircraft *self)
 {
         float dbearing = get_bearing(self) * 180 * M_1_PI;
         sprintf(self->info, "%d -> (x, y, v, d) = (%f, %f, %f, %f)", \
-                        self->id, self->d->xc, self->d->yc, get_velocity(self), dbearing);
+                        self->id, self->d->xc, self->d->yc,          \
+                        get_velocity(self) * time_scale, dbearing);
         return self->info;
 }
 

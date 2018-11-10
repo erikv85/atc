@@ -11,6 +11,8 @@
 const float SECTOR_START = 0;
 const float SECTOR_END = 1;
 
+float time_scale = 10000;
+
 void draw_aircrafts(struct arraylist ac_list);
 
 int out_of_bounds(struct aircraft *ac);
@@ -62,10 +64,10 @@ int main(int argc, char **argv)
 
                 struct aircraft *acs[naircraft];
                 float radius = 0.005;
-                acs[0] = new_aircraft(0, 0.5, radius, 0.01, 0);
+                acs[0] = new_aircraft(0, 0.5, radius, 0.01 / time_scale, 0);
                 set_freq(acs[0], 100);
                 set_id(acs[0], 1);
-                acs[1] = new_aircraft(1, 0.75, radius, -0.005, 0);
+                acs[1] = new_aircraft(1, 0.75, radius, -0.005 / time_scale, 0);
                 set_freq(acs[1], 100);
                 set_id(acs[1], 2);
 
@@ -73,7 +75,7 @@ int main(int argc, char **argv)
                 add(&al, acs[0]);
                 add(&al, acs[1]);
 
-                int report_interval = 10;
+                int report_interval = 10 * time_scale;
                 int time = 0;
                 if (graphics)
                         InitializeGraphics(argv[0], 400, 400);
@@ -100,7 +102,6 @@ int main(int argc, char **argv)
                                 }
                         }
                         time = (time + 1) % report_interval;
-                        sleep(1);
                         ctrl_msg[0] = '\0';
                 }
                 if (graphics) {
