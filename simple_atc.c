@@ -96,7 +96,8 @@ int main(int argc, char **argv)
                                         printf("%s\n", to_string(al.arr[i]));
                                 }
                                 if (out_of_bounds(al.arr[i])) {
-                                        printf("left radar: %s\n", to_string(al.arr[i]));
+                                        printf("%d left radar\n",
+                                                        ((struct aircraft *)al.arr[i])->id);
                                         free_aircraft(al.arr[i]);
                                         remove_by_index(&al, i);
                                 }

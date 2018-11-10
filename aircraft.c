@@ -55,32 +55,29 @@ void set_bearing(struct aircraft *self, float bearing)
 char *read_cmd(struct aircraft *self, char *cmd)
 {
         if (cmd == NULL || cmd[0] != 'i') {
-                return NULL;
+                ;
         } else if ((int)(cmd[1] - '0') == self->id) {
-                printf("message meant for %c received by %d\n", cmd[1], self->id);
                 char cmd_code = cmd[3];
                 char cmd_val = cmd[4];
                 float vec_vel = atof(cmd + 4);
                 printf("cmd letter: '%c'\n", cmd_code);
-                printf("cmd content: '%c'\n", cmd_val);
-                printf("cmd content as float: %f\n", vec_vel);
                 if (cmd_code == 'v') {
                         float oldvel = get_velocity(self);
                         set_velocity(self, vec_vel / time_scale);
-                        printf("changed velocity from %f to %f\n", oldvel, get_velocity(self));
+                        printf("%d: changed velocity from %f to %f\n",
+                                        self->id, oldvel, get_velocity(self));
                 } else if (cmd_code == 'd') {
                         float oldbearing = get_bearing(self);
                         float rad_bearing = atof(cmd + 4) * DEG_TO_RAD;
                         set_bearing(self, rad_bearing);
-                        printf("changed direction from %f to %f\n", oldbearing, get_bearing(self));
+                        printf("%d: changed direction from %f to %f\n",
+                                        self->id, oldbearing, get_bearing(self));
                 } else {
-                        printf("ignoring non-velocity command code");
+                        printf("%d: ignoring non-velocity command code",
+                                        self->id);
                 }
-                return NULL;
-        } else {
-                printf("overheard: message meant for %c received by %d\n", cmd[1], self->id);
-                return NULL;
         }
+        return NULL;
 }
 
 struct aircraft *new_aircraft(float xc, float yc, float r, float xv, float yv)
@@ -111,10 +108,13 @@ void free_aircraft(struct aircraft *ac)
 
 char *to_string(struct aircraft *self)
 {
-        float dbearing = get_bearing(self) * 180 * M_1_PI;
-        sprintf(self->info, "%d -> (x, y, v, d) = (%f, %f, %f, %f)", \
-                        self->id, self->d->xc, self->d->yc,          \
-                        get_velocity(self) * time_scale, dbearing);
+        float rbearing = get_bearing(self);
+        float dbearing = rbearing * 180 * M_1_PI;
+        if (dbearing < 0)
+                dbearing += 360;
+        sprintf(self->info, "%d -> (x, y, v, d) = (%f, %f, %.3f, %3.0f (%.2f))",
+                        self->id, self->d->xc, self->d->yc,
+                        get_velocity(self) * time_scale, dbearing, rbearing);
         return self->info;
 }
 
