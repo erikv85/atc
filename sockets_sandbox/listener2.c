@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     recvString[recvStringLen] = '\0';
     printf("listener2 Received: %s\n", recvString);    /* Print the received string */
 
-    //close(sock);
+    close(sock);
+    printf("listener2 infinite loop, bye\n");
+    while (1) {}
     exit(0);
 }
